@@ -25,4 +25,9 @@ selectFromDocument :: HTMLDocument -> Effect (Maybe Element)
 selectFromDocument doc = querySelector rootSelector (toParentNode doc)
 
 main :: Effect Unit
-main = window >>= document >>= selectFromDocument >>= maybeText >>= log
+main = do
+  w <- window
+  d <- document w
+  el <- selectFromDocument d
+  str <- maybeText el
+  log str
