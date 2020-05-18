@@ -5,23 +5,22 @@ import Prelude
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 
+import DocumentEvent (addEvent, inputEvent)
+
 import Web.HTML (window)
 import Web.HTML.Window (document)
-import Web.HTML.HTMLDocument (toEventTarget, toParentNode, HTMLDocument)
+import Web.HTML.HTMLDocument (toParentNode, HTMLDocument)
 import Web.HTML.HTMLInputElement (fromEventTarget, value, HTMLInputElement)
 
 import Web.DOM.Element (Element, toNode)
 import Web.DOM.Node (setTextContent)
 import Web.DOM.ParentNode (querySelector, QuerySelector(QuerySelector))
 
-import Web.Event.Event (Event, EventType(..), target)
-import Web.Event.EventTarget (EventTarget, eventListener, addEventListener)
+import Web.Event.Event (Event, target)
+import Web.Event.EventTarget (EventTarget)
 
 rootSelector :: QuerySelector
 rootSelector = QuerySelector ("#root")
-
-inputEvent :: EventType
-inputEvent = EventType ("input")
 
 selectFromDocument :: HTMLDocument -> Effect (Maybe Element)
 selectFromDocument doc = querySelector rootSelector (toParentNode doc)
@@ -51,5 +50,4 @@ main = do
   w <- window
   d <- document w
   el <- selectFromDocument d
-  eh <- eventListener (inputEventHandler el)
-  addEventListener inputEvent eh true (toEventTarget d)
+  addEvent inputEvent (inputEventHandler el)
